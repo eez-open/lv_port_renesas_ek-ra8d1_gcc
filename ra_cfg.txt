@@ -607,10 +607,6 @@ FSP Configuration
     
   Module "FreeRTOS Port (rm_freertos_port)"
   Module "FreeRTOS Heap 4"
-  Module "Graphics LCD (r_glcdc)"
-    Parameter Checking: Default (BSP)
-    Color Correction: Off
-    
   Module "D/AVE 2D Port Interface (r_drw)"
     Allow Indirect Mode: Enabled
     Memory Allocation: Default
@@ -630,10 +626,6 @@ FSP Configuration
   Module "External IRQ (r_icu)"
     Parameter Checking: Default (BSP)
     
-  Module "MIPI Display (r_mipi_dsi)"
-    Parameter Checking: Default (BSP)
-    
-  Module "MIPI Physical Layer (r_mipi_phy)"
   Module "Timer, General PWM (r_gpt)"
     Parameter Checking: Default (BSP)
     Pin Output Support: Disabled
@@ -642,6 +634,14 @@ FSP Configuration
   Module "Transfer (r_dtc)"
     Parameter Checking: Default (BSP)
     Linker section to keep DTC vector table: .fsp_dtc_vector_table
+    
+  Module "MIPI Physical Layer (r_mipi_phy)"
+  Module "MIPI Display (r_mipi_dsi)"
+    Parameter Checking: Default (BSP)
+    
+  Module "Graphics LCD (r_glcdc)"
+    Parameter Checking: Default (BSP)
+    Color Correction: Off
     
   FreeRTOS
     General: Custom FreeRTOSConfig.h: User_FreeRTOSConfig.h
@@ -730,15 +730,134 @@ FSP Configuration
     Allocate Secure Context: Enable
     
     Instance "FreeRTOS Heap 4"
+    Instance "D/AVE 2D Port Interface (r_drw)"
+      D2 Device Handle Name: d2_handle0
+      DRW Interrupt Priority: Priority 2
+      
+      Instance "D/AVE 2D (r_drw)"
+    Instance "g_uart0 UART (r_sci_b_uart)"
+      General: Name: g_uart0
+      General: Channel: 9
+      General: Data Bits: 8bits
+      General: Parity: None
+      General: Stop Bits: 1bit
+      Baud: Baud Rate: 921600
+      Baud: Baud Rate Modulation: Enabled
+      Baud: Max Error (%): 1
+      Flow Control: CTS/RTS Selection: Hardware RTS
+      Flow Control: Software RTS Port: Disabled
+      Flow Control: Software RTS Pin: Disabled
+      Extra: Clock Source: Internal Clock
+      Extra: Start bit detection: Falling Edge
+      Extra: Noise Filter: Disable
+      Extra: Receive FIFO Trigger Level: Max
+      Extra: RS-485: DE Pin: Disable
+      Extra: RS-485: DE Pin Polarity: Active High
+      Extra: RS-485: DE Pin Assertion Time: 1
+      Extra: RS-485: DE Pin Negation Time: 1
+      Interrupts: Callback: uart_callback
+      Interrupts: Receive Interrupt Priority: Priority 12
+      Interrupts: Transmit Data Empty Interrupt Priority: Priority 12
+      Interrupts: Transmit End Interrupt Priority: Priority 12
+      Interrupts: Error Interrupt Priority: Priority 12
+      
+      Instance "g_transfer0 Transfer (r_dtc) SCI9 TXI (Transmit data empty)"
+        Name: g_transfer0
+        Mode: Normal
+        Transfer Size: 1 Byte
+        Destination Address Mode: Fixed
+        Source Address Mode: Incremented
+        Repeat Area (Unused in Normal Mode): Source
+        Interrupt Frequency: After all transfers have completed
+        Number of Transfers: 0
+        Number of Blocks (Valid only in Block Mode): 0
+        Number of Transfer Descriptors: 1
+        Activation Source: SCI9 TXI (Transmit data empty)
+        
+    Instance "g_i2c_master1 I2C Master (r_iic_master)"
+      Name: g_i2c_master1
+      Channel: 1
+      Rate: Fast-mode
+      Rise Time (ns): 120
+      Fall Time (ns): 120
+      Duty Cycle (%): 50
+      Slave Address: 0x5D
+      Address Mode: 7-Bit
+      Timeout Mode: Long Mode
+      Timeout during SCL Low: Enabled
+      Callback: g_i2c_master1_cb
+      Interrupt Priority Level: Priority 12
+      
+    Instance "g_external_irq3 External IRQ (r_icu)"
+      Name: g_external_irq3
+      Channel: 3
+      Trigger: Falling
+      Digital Filtering: Enabled
+      Digital Filtering Sample Clock (Only valid when Digital Filtering is Enabled): PCLK / 64
+      Callback: touch_irq_callback
+      Pin Interrupt Priority: Priority 12
+      
+    Instance "g_timer0 Timer, General PWM (r_gpt)"
+      General: Name: g_timer0
+      General: Channel: 0
+      General: Mode: Periodic
+      General: Period: 1
+      General: Compare Match: Compare Match A: Status: Disabled
+      General: Compare Match: Compare Match A: Compare match value: 0
+      General: Compare Match: Compare Match B: Status: Disabled
+      General: Compare Match: Compare Match B: Compare match value: 0
+      General: Period Unit: Milliseconds
+      Output: Custom Waveform: GTIOA: Initial Output Level: Pin Level Low
+      Output: Custom Waveform: GTIOA: Cycle End Output Level: Pin Level Retain
+      Output: Custom Waveform: GTIOA: Compare Match Output Level: Pin Level Retain
+      Output: Custom Waveform: GTIOA: Retain Output Level at Count Stop: Disabled
+      Output: Custom Waveform: GTIOB: Initial Output Level: Pin Level Low
+      Output: Custom Waveform: GTIOB: Cycle End Output Level: Pin Level Retain
+      Output: Custom Waveform: GTIOB: Compare Match Output Level: Pin Level Retain
+      Output: Custom Waveform: GTIOB: Retain Output Level at Count Stop: Disabled
+      Output: Custom Waveform: Custom Waveform Enable: Disabled
+      Output: Duty Cycle Percent (only applicable in PWM mode): 50
+      Output: GTIOCA Output Enabled: False
+      Output: GTIOCA Stop Level: Pin Level Low
+      Output: GTIOCB Output Enabled: False
+      Output: GTIOCB Stop Level: Pin Level Low
+      Input: Count Up Source: 
+      Input: Count Down Source: 
+      Input: Start Source: 
+      Input: Stop Source: 
+      Input: Clear Source: 
+      Input: Capture A Source: 
+      Input: Capture B Source: 
+      Input: Noise Filter A Sampling Clock Select: No Filter
+      Input: Noise Filter B Sampling Clock Select: No Filter
+      Interrupts: Callback: timer_tick_callback
+      Interrupts: Overflow/Crest Interrupt Priority: Priority 8
+      Interrupts: Capture/Compare match A Interrupt Priority: Disabled
+      Interrupts: Capture/Compare match B Interrupt Priority: Disabled
+      Interrupts: Underflow/Trough Interrupt Priority: Disabled
+      Extra Features: Extra Features: Disabled
+      Extra Features: Output Disable: POEG Link: POEG Channel 0
+      Extra Features: Output Disable: Output Disable POEG Trigger: 
+      Extra Features: ADC Trigger: Start Event Trigger (Channels with GTINTAD only): 
+      Extra Features: ADC Trigger: ADC A Compare Match (Raw Counts): 0
+      Extra Features: ADC Trigger: ADC B Compare Match (Raw Counts): 0
+      Extra Features: Dead Time (Value range varies with Channel): Dead Time Count Up (Raw Counts): 0
+      Extra Features: Dead Time (Value range varies with Channel): Dead Time Count Down (Raw Counts) (Channels with GTDVD only): 0
+      Extra Features: Interrupt Skipping (Channels with GTITC only): Interrupt to Count: None
+      Extra Features: Interrupt Skipping (Channels with GTITC only): Interrupt Skip Count: 0
+      Extra Features: Interrupt Skipping (Channels with GTITC only): Skip ADC Events: None
+      Extra Features: Output Disable: GTIOCA Disable Setting: Disable Prohibited
+      Extra Features: Output Disable: GTIOCB Disable Setting: Disable Prohibited
+      
     Instance "g_display0 Graphics LCD (r_glcdc)"
       General: Name: g_display0
       Interrupts: Callback Function: glcdc_callback
-      Interrupts: Line Detect Interrupt Priority: Priority 12
-      Interrupts: Underflow 1 Interrupt Priority: Priority 12
+      Interrupts: Line Detect Interrupt Priority: Priority 1
+      Interrupts: Underflow 1 Interrupt Priority: Disabled
       Interrupts: Underflow 2 Interrupt Priority: Disabled
       Input: Graphics Layer 1: General: Enabled: Yes
-      Input: Graphics Layer 1: General: Horizontal size: 480
-      Input: Graphics Layer 1: General: Vertical size: 854
+      Input: Graphics Layer 1: General: Horizontal size: 800
+      Input: Graphics Layer 1: General: Vertical size: 1280
       Input: Graphics Layer 1: General: Horizontal position: 0
       Input: Graphics Layer 1: General: Vertical position: 0
       Input: Graphics Layer 1: Background Color: Alpha: 255
@@ -755,8 +874,8 @@ FSP Configuration
       Input: Graphics Layer 1: Fading: Mode: None
       Input: Graphics Layer 1: Fading: Speed: 0
       Input: Graphics Layer 2: General: Enabled: No
-      Input: Graphics Layer 2: General: Horizontal size: 20
-      Input: Graphics Layer 2: General: Vertical size: 85
+      Input: Graphics Layer 2: General: Horizontal size: 800
+      Input: Graphics Layer 2: General: Vertical size: 1280
       Input: Graphics Layer 2: General: Horizontal position: 0
       Input: Graphics Layer 2: General: Vertical position: 0
       Input: Graphics Layer 2: Background Color: Alpha: 255
@@ -764,22 +883,22 @@ FSP Configuration
       Input: Graphics Layer 2: Background Color: Green: 255
       Input: Graphics Layer 2: Background Color: Blue: 255
       Input: Graphics Layer 2: Framebuffer: Framebuffer name: fb_foreground
-      Input: Graphics Layer 2: Framebuffer: Number of framebuffers: 1
+      Input: Graphics Layer 2: Framebuffer: Number of framebuffers: 2
       Input: Graphics Layer 2: Framebuffer: Section for framebuffer allocation: .sdram
-      Input: Graphics Layer 2: General: Color format: RGB888 (32-bit)
+      Input: Graphics Layer 2: General: Color format: RGB565 (16-bit)
       Input: Graphics Layer 2: General: Line descending mode: Disabled
       Input: Graphics Layer 2: Line Repeat: Enable: Off
       Input: Graphics Layer 2: Line Repeat: Repeat count: 0
       Input: Graphics Layer 2: Fading: Mode: None
       Input: Graphics Layer 2: Fading: Speed: 0
-      Output: Timing: Horizontal total cycles: 559
-      Output: Timing: Horizontal active video cycles: 480
-      Output: Timing: Horizontal back porch cycles: 5
+      Output: Timing: Horizontal total cycles: 880
+      Output: Timing: Horizontal active video cycles: 800
+      Output: Timing: Horizontal back porch cycles: 35
       Output: Timing: Horizontal sync signal cycles: 2
       Output: Timing: Horizontal sync signal polarity: Low active
-      Output: Timing: Vertical total lines: 894
-      Output: Timing: Vertical active video lines: 854
-      Output: Timing: Vertical back porch lines: 20
+      Output: Timing: Vertical total lines: 1304
+      Output: Timing: Vertical active video lines: 1280
+      Output: Timing: Vertical back porch lines: 14
       Output: Timing: Vertical sync signal lines: 3
       Output: Timing: Vertical sync signal polarity: Low active
       Output: Timing: Data Enable Signal Polarity: High active
@@ -929,7 +1048,7 @@ FSP Configuration
         Interrupts: dsi_ppi Interrupt Priority: Priority 12
         Interrupts: Receive Interrupt Enable: BTA Request End, LP-RX Host Processor Timeout, Turnaround Acknowledge Timeout, Response Packet Receive, EoTp Receive, Tearing Effect Trigger Receive, ACK Trigger Receive, External Tearing Effect Detect, Malform Error, Multi Bit ECC Error, Unexpected Packet Error, Word Count Error, CRC Error, Internal Bus Error, Receive Buffer Overflow Error, Peripheral Response Timeout Error, No Response Error, Retrun Packet Size Error, Single Bit ECC Error, Acknowledge and Error Report Receive
         Interrupts: Fatal Error Interrupt Enable: HS TX Timeout, LP-RX Host Processor Timeout, Turnaround Acknowledge Timeout, Escape mode Entry Error, LPDT Sync Error, Control Error, LP0 Contention Error, LP1 Contention Error
-        Interrupts: Physical Lane Interrupt Enable: 
+        Interrupts: Physical Lane Interrupt Enable: Data Lane ULPS Enter, Data Lane ULPS Exit
         Interrupts: Video Mode Interrupt Enable: Video Buffer Underflow Error, Video Buffer Overflow Error
         Interrupts: Sequence Channel 0 Interrupt Enable: All Actions Finish, All Descriptors Finish, Tx Internal Bus Error, Receive Fatal Error, Receive Fail, Receive Packet Data Fail, Receive Correctable Error Interrupt, Receive Acknowledge and Error Report Packet
         Interrupts: Sequence Channel 1 Interrupt Enable: All Actions Finish, All Descriptors Finish, Packet Size Error, Tx Internal Bus Error, Receive Fatal Error, Receive Fail, Receive Packet Data Fail, Receive Correctable Error Interrupt, Receive Acknowledge and Error Report Packet
@@ -976,125 +1095,6 @@ FSP Configuration
           Timing: THSEXIT: ns: 100
           Timing: THSEXIT: UI: 0
           
-    Instance "D/AVE 2D Port Interface (r_drw)"
-      D2 Device Handle Name: d2_handle0
-      DRW Interrupt Priority: Priority 2
-      
-      Instance "D/AVE 2D (r_drw)"
-    Instance "g_uart0 UART (r_sci_b_uart)"
-      General: Name: g_uart0
-      General: Channel: 9
-      General: Data Bits: 8bits
-      General: Parity: None
-      General: Stop Bits: 1bit
-      Baud: Baud Rate: 921600
-      Baud: Baud Rate Modulation: Enabled
-      Baud: Max Error (%): 1
-      Flow Control: CTS/RTS Selection: Hardware RTS
-      Flow Control: Software RTS Port: Disabled
-      Flow Control: Software RTS Pin: Disabled
-      Extra: Clock Source: Internal Clock
-      Extra: Start bit detection: Falling Edge
-      Extra: Noise Filter: Disable
-      Extra: Receive FIFO Trigger Level: Max
-      Extra: RS-485: DE Pin: Disable
-      Extra: RS-485: DE Pin Polarity: Active High
-      Extra: RS-485: DE Pin Assertion Time: 1
-      Extra: RS-485: DE Pin Negation Time: 1
-      Interrupts: Callback: uart_callback
-      Interrupts: Receive Interrupt Priority: Priority 12
-      Interrupts: Transmit Data Empty Interrupt Priority: Priority 12
-      Interrupts: Transmit End Interrupt Priority: Priority 12
-      Interrupts: Error Interrupt Priority: Priority 12
-      
-      Instance "g_transfer0 Transfer (r_dtc) SCI9 TXI (Transmit data empty)"
-        Name: g_transfer0
-        Mode: Normal
-        Transfer Size: 1 Byte
-        Destination Address Mode: Fixed
-        Source Address Mode: Incremented
-        Repeat Area (Unused in Normal Mode): Source
-        Interrupt Frequency: After all transfers have completed
-        Number of Transfers: 0
-        Number of Blocks (Valid only in Block Mode): 0
-        Number of Transfer Descriptors: 1
-        Activation Source: SCI9 TXI (Transmit data empty)
-        
-    Instance "g_i2c_master1 I2C Master (r_iic_master)"
-      Name: g_i2c_master1
-      Channel: 1
-      Rate: Fast-mode
-      Rise Time (ns): 120
-      Fall Time (ns): 120
-      Duty Cycle (%): 50
-      Slave Address: 0x5D
-      Address Mode: 7-Bit
-      Timeout Mode: Long Mode
-      Timeout during SCL Low: Enabled
-      Callback: g_i2c_master1_cb
-      Interrupt Priority Level: Priority 12
-      
-    Instance "g_external_irq3 External IRQ (r_icu)"
-      Name: g_external_irq3
-      Channel: 3
-      Trigger: Falling
-      Digital Filtering: Enabled
-      Digital Filtering Sample Clock (Only valid when Digital Filtering is Enabled): PCLK / 64
-      Callback: touch_irq_callback
-      Pin Interrupt Priority: Priority 12
-      
-    Instance "g_timer0 Timer, General PWM (r_gpt)"
-      General: Name: g_timer0
-      General: Channel: 0
-      General: Mode: Periodic
-      General: Period: 1
-      General: Compare Match: Compare Match A: Status: Disabled
-      General: Compare Match: Compare Match A: Compare match value: 0
-      General: Compare Match: Compare Match B: Status: Disabled
-      General: Compare Match: Compare Match B: Compare match value: 0
-      General: Period Unit: Milliseconds
-      Output: Custom Waveform: GTIOA: Initial Output Level: Pin Level Low
-      Output: Custom Waveform: GTIOA: Cycle End Output Level: Pin Level Retain
-      Output: Custom Waveform: GTIOA: Compare Match Output Level: Pin Level Retain
-      Output: Custom Waveform: GTIOA: Retain Output Level at Count Stop: Disabled
-      Output: Custom Waveform: GTIOB: Initial Output Level: Pin Level Low
-      Output: Custom Waveform: GTIOB: Cycle End Output Level: Pin Level Retain
-      Output: Custom Waveform: GTIOB: Compare Match Output Level: Pin Level Retain
-      Output: Custom Waveform: GTIOB: Retain Output Level at Count Stop: Disabled
-      Output: Custom Waveform: Custom Waveform Enable: Disabled
-      Output: Duty Cycle Percent (only applicable in PWM mode): 50
-      Output: GTIOCA Output Enabled: False
-      Output: GTIOCA Stop Level: Pin Level Low
-      Output: GTIOCB Output Enabled: False
-      Output: GTIOCB Stop Level: Pin Level Low
-      Input: Count Up Source: 
-      Input: Count Down Source: 
-      Input: Start Source: 
-      Input: Stop Source: 
-      Input: Clear Source: 
-      Input: Capture A Source: 
-      Input: Capture B Source: 
-      Input: Noise Filter A Sampling Clock Select: No Filter
-      Input: Noise Filter B Sampling Clock Select: No Filter
-      Interrupts: Callback: timer_tick_callback
-      Interrupts: Overflow/Crest Interrupt Priority: Priority 8
-      Interrupts: Capture/Compare match A Interrupt Priority: Disabled
-      Interrupts: Capture/Compare match B Interrupt Priority: Disabled
-      Interrupts: Underflow/Trough Interrupt Priority: Disabled
-      Extra Features: Extra Features: Disabled
-      Extra Features: Output Disable: POEG Link: POEG Channel 0
-      Extra Features: Output Disable: Output Disable POEG Trigger: 
-      Extra Features: ADC Trigger: Start Event Trigger (Channels with GTINTAD only): 
-      Extra Features: ADC Trigger: ADC A Compare Match (Raw Counts): 0
-      Extra Features: ADC Trigger: ADC B Compare Match (Raw Counts): 0
-      Extra Features: Dead Time (Value range varies with Channel): Dead Time Count Up (Raw Counts): 0
-      Extra Features: Dead Time (Value range varies with Channel): Dead Time Count Down (Raw Counts) (Channels with GTDVD only): 0
-      Extra Features: Interrupt Skipping (Channels with GTITC only): Interrupt to Count: None
-      Extra Features: Interrupt Skipping (Channels with GTITC only): Interrupt Skip Count: 0
-      Extra Features: Interrupt Skipping (Channels with GTITC only): Skip ADC Events: None
-      Extra Features: Output Disable: GTIOCA Disable Setting: Disable Prohibited
-      Extra Features: Output Disable: GTIOCB Disable Setting: Disable Prohibited
-      
   Object "g_reset_binary_semaphore Binary Semaphore"
     Symbol: g_reset_binary_semaphore
     Memory Allocation: Static

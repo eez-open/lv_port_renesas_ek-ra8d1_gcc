@@ -13,7 +13,7 @@ static volatile bool g_message_sent = false;
 fsp_err_t dsi_layer_configure_peripheral()
 {
     fsp_err_t err = FSP_SUCCESS;
-    LCD_setting_table * init_table = lcd_init_focuslcd;
+    LCD_setting_table * init_table = lcd_init_ER_TFT080_03;
 
     err = dsi_layer_set_peripheral_max_return_msg_size(); // This must be performed prior to reading from display
     if (FSP_SUCCESS == err)

@@ -16,6 +16,7 @@ typedef struct {
 extern const mipi_dsi_cfg_t g_mipi_dsi1_cfg;
 extern mipi_dsi_instance_ctrl_t  g_mipi_dsi0_ctrl;
 extern LCD_setting_table lcd_init_focuslcd[];
+extern const LCD_setting_table lcd_init_ER_TFT080_03[];
 
 fsp_err_t dsi_layer_configure_peripheral(void);
 
