@@ -12,7 +12,7 @@
     <option key="#FSPVersion#" value="5.3.0"/>
     <option key="#ConfigurationFragments#" value="Renesas##BSP##Board##ra8d1_ek##"/>
     <option key="#SELECTED_TOOLCHAIN#" value="gcc-arm-embedded"/>
-    <option key="#ToolchainVersion#" value="10.3.1.20210824"/>
+    <option key="#ToolchainVersion#" value="13.2.1.arm-13-7"/>
   </generalSettings>
   <raBspConfiguration/>
   <raClockConfiguration>
@@ -118,6 +118,7 @@
       <configSetting altId="ether_rmii.rmii0_txd0.p700" configurationId="ether_rmii.rmii0_txd0"/>
       <configSetting altId="ether_rmii.rmii0_txd1.p406" configurationId="ether_rmii.rmii0_txd1"/>
       <configSetting altId="ether_rmii.rmii0_txd_en.p405" configurationId="ether_rmii.rmii0_txd_en"/>
+      <configSetting altId="gpt3.gtioc3b.p404" configurationId="gpt3.gtioc3b" isUsedByDriver="true"/>
       <configSetting altId="iic1.scl1.p512" configurationId="iic1.scl1" isUsedByDriver="true"/>
       <configSetting altId="iic1.sda1.p511" configurationId="iic1.sda1" isUsedByDriver="true"/>
       <configSetting altId="jtag_fslash_swd.tck.p211" configurationId="jtag_fslash_swd.tck"/>
@@ -139,7 +140,6 @@
       <configSetting altId="ospi.om_sio6.p802" configurationId="ospi.om_sio6"/>
       <configSetting altId="ospi.om_sio7.p804" configurationId="ospi.om_sio7"/>
       <configSetting altId="p107.output.low" configurationId="p107"/>
-      <configSetting altId="p404.output.low" configurationId="p404"/>
       <configSetting altId="p414.output.low" configurationId="p414"/>
       <configSetting altId="p504.input" configurationId="p504"/>
       <configSetting altId="p505.input" configurationId="p505"/>

@@ -56,7 +56,9 @@ void board_init(void)
     lv_display_set_default(disp);
 
     /* Enable the backlight */
-    R_IOPORT_PinWrite(&g_ioport_ctrl, DISP_BLEN, BSP_IO_LEVEL_HIGH);
+//    R_IOPORT_PinWrite(&g_ioport_ctrl, DISP_BLEN, BSP_IO_LEVEL_HIGH);
+    R_GPT_Open(&g_timer_pwm_ctrl, &g_timer_pwm_cfg);
+    R_GPT_Start(&g_timer_pwm_ctrl);
 
     lv_port_indev_init();
 }
