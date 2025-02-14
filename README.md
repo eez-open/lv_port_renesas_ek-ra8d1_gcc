@@ -1,6 +1,6 @@
 # EEZ Studio example with Renesas EK-RA8D1 and LVGL
 
-![EK-RA8D1 Kit Showing EEZ Studio Application](EK-RA8D1_CounterApp.png)
+![EK-RA8D1 Kit Showing EEZ Studio Application](EK-RA8D1_CounterApp.jpg)
 
 Integration steps:
 
