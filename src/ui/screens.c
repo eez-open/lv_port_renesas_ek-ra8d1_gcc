@@ -136,6 +136,8 @@ void create_screen_main() {
             }
         }
     }
+    
+    tick_screen_main();
 }
 
 void tick_screen_main() {
@@ -155,6 +157,18 @@ void tick_screen_main() {
 static const char *screen_names[] = { "Main" };
 static const char *object_names[] = { "main", "obj0", "obj1", "obj2" };
 
+
+typedef void (*tick_screen_func_t)();
+tick_screen_func_t tick_screen_funcs[] = {
+    tick_screen_main,
+};
+void tick_screen(int screen_index) {
+    tick_screen_funcs[screen_index]();
+}
+void tick_screen_by_id(enum ScreensEnum screenId) {
+    tick_screen_funcs[screenId - 1]();
+}
+
 void create_screens() {
     eez_flow_init_screen_names(screen_names, sizeof(screen_names) / sizeof(const char *));
     eez_flow_init_object_names(object_names, sizeof(object_names) / sizeof(const char *));
@@ -164,14 +178,4 @@ void create_screens() {
     lv_disp_set_theme(dispp, theme);
     
     create_screen_main();
-}
-
-typedef void (*tick_screen_func_t)();
-
-tick_screen_func_t tick_screen_funcs[] = {
-    tick_screen_main,
-};
-
-void tick_screen(int screen_index) {
-    tick_screen_funcs[screen_index]();
 }
